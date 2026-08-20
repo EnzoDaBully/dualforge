@@ -15,9 +15,7 @@ export async function POST(req: NextRequest) {
     const FAL_KEY = "0e1cedda-6958-4cd8-bd76-744d9b5f0af7:35bf4089b513b719f02c39671dec77b6";
     // ↑↑↑ PASTE YOUR FAL KEY BETWEEN THE QUOTES ↑↑↑
 
-    if (!FAL_KEY || FAL_KEY === "PASTE_YOUR_FAL_KEY_HERE") {
-      return NextResponse.json({ error: "API key not set" }, { status: 500 });
-    }
+
 
     const scenePrompts: Record<string, string> = {
       blowjob: "two men, intimate oral scene, detailed faces, realistic, cinematic lighting",
