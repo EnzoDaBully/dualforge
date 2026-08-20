@@ -89,7 +89,7 @@ export default function Home() {
               <button onClick={() => fileARef.current?.click()} style={{ width: "100%", aspectRatio: "3/4", background: "#09090b", border: "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {imageA ? <img src={imageA} alt="You" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ textAlign: "center", color: "#52525b" }}><div style={{ fontSize: 24 }}>+</div><div style={{ fontSize: 11 }}>Tap</div></div>}
               </button>
-              <input ref={fileARef} type="file" accept="image/*" capture="user" style={{ display: "none" }} onChange={(e) => handleImageUpload(e, "A")} />
+              <input ref={fileARef} type="file" accept="image/style={{ display: "none" }} onChange={(e) => handleImageUpload(e, "A")} />
             </div>
             {/* Other */}
             <div style={{ background: "#18181b", border: "1px solid #27272a", borderRadius: 16, overflow: "hidden" }}>
@@ -100,7 +100,7 @@ export default function Home() {
               <button onClick={() => fileBRef.current?.click()} style={{ width: "100%", aspectRatio: "3/4", background: "#09090b", border: "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {imageB ? <img src={imageB} alt="Other" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ textAlign: "center", color: "#52525b" }}><div style={{ fontSize: 24 }}>+</div><div style={{ fontSize: 11 }}>Tap</div></div>}
               </button>
-              <input ref={fileBRef} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => handleImageUpload(e, "B")} />
+              <input ref={fileBRef} type="file" accept="image/style={{ display: "none" }} onChange={(e) => handleImageUpload(e, "B")} />
             </div>
           </div>
         </section>
