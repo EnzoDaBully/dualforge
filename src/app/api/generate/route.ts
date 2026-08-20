@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing data" }, { status: 400 });
     }
 
-    const FAL_KEY = process.env.FAL_KEY;
+    const FAL_KEY = "0e1cedda-6958-4cd8-bd76-744d9b5f0af7:35bf4089b513b719f02c39671dec77b6";
     if (!FAL_KEY) {
       return NextResponse.json({ error: "API key not set" }, { status: 500 });
     }
