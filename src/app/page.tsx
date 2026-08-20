@@ -36,24 +36,70 @@ export default function Home() {
     reader.readAsDataURL(file);
   };
 
+  const pollResult = async (statusUrl: string, responseUrl: string) => {
+    for (let i = 0; i < 60; i++) {
+      await new Promise((r) => setTimeout(r, 3000));
+      setStatus(`Generating... (${i * 3}s)`);
+
+      try {
+        const res = await fetch(statusUrl);
+        const data = await res.json();
+
+        if (data.status === "COMPLETED") {
+          const finalRes = await fetch(responseUrl);
+          const finalData = await finalRes.json();
+          const videoUrl = finalData?.video?.url || finalData?.data?.video?.url;
+          if (videoUrl) {
+            setResultUrl(videoUrl);
+            setStatus("Done");
+            return;
+          }
+        }
+
+        if (data.status === "FAILED") {
+          setStatus("Generation failed");
+          return;
+        }
+      } catch {
+        // keep polling
+      }
+    }
+    setStatus("Timed out. Try again.");
+  };
+
   const handleGenerate = async () => {
     if (!imageA || !imageB || !selectedScene) {
       setStatus("Upload both pics and pick a scene.");
       return;
     }
+
     setIsGenerating(true);
-    setStatus("Preparing...");
+    setStatus("Sending to model...");
     setResultUrl(null);
+
     try {
-      await new Promise((r) => setTimeout(r, 1200));
-      setStatus("Sending faces to model...");
-      await new Promise((r) => setTimeout(r, 1800));
-      setStatus("Generating video... this can take a few minutes");
-      await new Promise((r) => setTimeout(r, 2500));
-      setResultUrl("https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4");
-      setStatus("Done (placeholder for now)");
-    } catch {
-      setStatus("Something went wrong.");
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          imageA,
+          imageB,
+          scene: selectedScene,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setStatus(data.error || "Something went wrong");
+        setIsGenerating(false);
+        return;
+      }
+
+      setStatus("Queued... waiting for video");
+      await pollResult(data.status_url, data.response_url);
+    } catch (err) {
+      setStatus("Network error");
     } finally {
       setIsGenerating(false);
     }
@@ -125,7 +171,7 @@ export default function Home() {
             <div style={{ background: "#18181b", border: "1px solid #27272a", borderRadius: 16, overflow: "hidden" }}>
               <video src={resultUrl} controls playsInline style={{ width: "100%", aspectRatio: "16/9", background: "#000" }} autoPlay loop />
               <div style={{ padding: 12, display: "flex", gap: 8 }}>
-                <a href={resultUrl} download style={{ flex: 1, textAlign: "center", padding: "10px 0", borderRadius: 10, background: "#27272a", color: "#fafafa", textDecoration: "none", fontSize: 14 }}>Download</a>
+                <a href={resultUrl} download className="download" style={{ flex: 1, textAlign: "center", padding: "10px 0", borderRadius: 10, background: "#27272a", color: "#fafafa", textDecoration: "none", fontSize: 14 }}>Download</a>
                 <button onClick={() => { setResultUrl(null); setStatus(""); }} style={{ flex: 1, padding: "10px 0", borderRadius: 10, background: "#27272a", border: "none", color: "#fafafa", fontSize: 14 }}>Clear</button>
               </div>
             </div>
