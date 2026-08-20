@@ -24,10 +24,7 @@ export default function Home() {
   const fileARef = useRef<HTMLInputElement>(null);
   const fileBRef = useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    which: "A" | "B"
-  ) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, which: "A" | "B") => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
@@ -54,8 +51,8 @@ export default function Home() {
       setStatus("Generating video... this can take a few minutes");
       await new Promise((r) => setTimeout(r, 2500));
       setResultUrl("https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4");
-      setStatus("Done (placeholder video for now)");
-    } catch (err) {
+      setStatus("Done (placeholder for now)");
+    } catch {
       setStatus("Something went wrong.");
     } finally {
       setIsGenerating(false);
@@ -65,78 +62,90 @@ export default function Home() {
   const canGenerate = !!(imageA && imageB && selectedScene && !isGenerating);
 
   return (
-    <div className="min-h-dvh bg-zinc-950 text-zinc-100 flex flex-col">
-      <header className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/90 backdrop-blur-md pt-[env(safe-area-inset-top)]">
-        <div className="px-4 py-3 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-rose-600 flex items-center justify-center text-sm font-bold">DF</div>
+    <div style={{ minHeight: "100dvh", background: "#09090b", color: "#fafafa", display: "flex", flexDirection: "column", fontFamily: "system-ui, -apple-system, sans-serif" }}>
+      {/* Header */}
+      <header style={{ position: "sticky", top: 0, zIndex: 50, borderBottom: "1px solid #27272a", background: "rgba(9,9,11,0.9)", paddingTop: "env(safe-area-inset-top)" }}>
+        <div style={{ padding: "12px 16px", display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: "#e11d48", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 14 }}>DF</div>
           <div>
-            <h1 className="font-semibold text-base leading-tight">DualForge</h1>
-            <p className="text-[11px] text-zinc-500 leading-tight">Dual-face video</p>
+            <div style={{ fontWeight: 600, fontSize: 16 }}>DualForge</div>
+            <div style={{ fontSize: 11, color: "#71717a" }}>Dual-face video</div>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 px-4 py-5 pb-28 max-w-lg mx-auto w-full">
-        <section className="mb-8">
-          <h2 className="text-base font-semibold mb-1">1. Upload faces</h2>
-          <p className="text-xs text-zinc-500 mb-4">Clear photos work best.</p>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl overflow-hidden">
-              <div className="px-3 pt-2.5 pb-1.5 flex justify-between">
-                <span className="text-xs font-medium text-zinc-400">You</span>
-                {imageA && <button onClick={() => setImageA(null)} className="text-[11px] text-zinc-500">Clear</button>}
+      <main style={{ flex: 1, padding: "20px 16px 120px", maxWidth: 480, margin: "0 auto", width: "100%" }}>
+        {/* Uploads */}
+        <section style={{ marginBottom: 32 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 4 }}>1. Upload faces</h2>
+          <p style={{ fontSize: 12, color: "#71717a", marginBottom: 16 }}>Clear photos work best</p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            {/* You */}
+            <div style={{ background: "#18181b", border: "1px solid #27272a", borderRadius: 16, overflow: "hidden" }}>
+              <div style={{ padding: "10px 12px 6px", display: "flex", justifyContent: "space-between", fontSize: 12, color: "#a1a1aa" }}>
+                <span>You</span>
+                {imageA && <button onClick={() => setImageA(null)} style={{ background: "none", border: "none", color: "#71717a", fontSize: 11 }}>Clear</button>}
               </div>
-              <button type="button" onClick={() => fileARef.current?.click()} className="w-full aspect-[3/4] bg-zinc-950 flex items-center justify-center">
-                {imageA ? <img src={imageA} alt="You" className="w-full h-full object-cover" /> : <div className="text-center"><div className="text-2xl text-zinc-600">+</div><p className="text-[11px] text-zinc-500">Tap</p></div>}
+              <button onClick={() => fileARef.current?.click()} style={{ width: "100%", aspectRatio: "3/4", background: "#09090b", border: "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {imageA ? <img src={imageA} alt="You" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ textAlign: "center", color: "#52525b" }}><div style={{ fontSize: 24 }}>+</div><div style={{ fontSize: 11 }}>Tap</div></div>}
               </button>
-              <input ref={fileARef} type="file" accept="image/*" capture="user" className="hidden" onChange={(e) => handleImageUpload(e, "A")} />
+              <input ref={fileARef} type="file" accept="image/*" capture="user" style={{ display: "none" }} onChange={(e) => handleImageUpload(e, "A")} />
             </div>
-            <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl overflow-hidden">
-              <div className="px-3 pt-2.5 pb-1.5 flex justify-between">
-                <span className="text-xs font-medium text-zinc-400">Other</span>
-                {imageB && <button onClick={() => setImageB(null)} className="text-[11px] text-zinc-500">Clear</button>}
+            {/* Other */}
+            <div style={{ background: "#18181b", border: "1px solid #27272a", borderRadius: 16, overflow: "hidden" }}>
+              <div style={{ padding: "10px 12px 6px", display: "flex", justifyContent: "space-between", fontSize: 12, color: "#a1a1aa" }}>
+                <span>Other</span>
+                {imageB && <button onClick={() => setImageB(null)} style={{ background: "none", border: "none", color: "#71717a", fontSize: 11 }}>Clear</button>}
               </div>
-              <button type="button" onClick={() => fileBRef.current?.click()} className="w-full aspect-[3/4] bg-zinc-950 flex items-center justify-center">
-                {imageB ? <img src={imageB} alt="Other" className="w-full h-full object-cover" /> : <div className="text-center"><div className="text-2xl text-zinc-600">+</div><p className="text-[11px] text-zinc-500">Tap</p></div>}
+              <button onClick={() => fileBRef.current?.click()} style={{ width: "100%", aspectRatio: "3/4", background: "#09090b", border: "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {imageB ? <img src={imageB} alt="Other" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ textAlign: "center", color: "#52525b" }}><div style={{ fontSize: 24 }}>+</div><div style={{ fontSize: 11 }}>Tap</div></div>}
               </button>
-              <input ref={fileBRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "B")} />
+              <input ref={fileBRef} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => handleImageUpload(e, "B")} />
             </div>
           </div>
         </section>
 
-        <section className="mb-8">
-          <h2 className="text-base font-semibold mb-1">2. Pick scene</h2>
-          <div className="grid grid-cols-2 gap-2.5">
+        {/* Scenes */}
+        <section style={{ marginBottom: 32 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 4 }}>2. Pick scene</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
             {SCENES.map((scene) => (
-              <button key={scene.id} type="button" onClick={() => setSelectedScene(scene.id)}
-                className={`text-left p-3.5 rounded-xl border ${selectedScene === scene.id ? "border-rose-600 bg-rose-600/15" : "border-zinc-800 bg-zinc-900/80"}`}>
-                <div className="font-medium text-sm">{scene.label}</div>
-                <div className="text-[11px] text-zinc-500">{scene.desc}</div>
+              <button key={scene.id} onClick={() => setSelectedScene(scene.id)}
+                style={{
+                  textAlign: "left", padding: 14, borderRadius: 12, border: selectedScene === scene.id ? "1px solid #e11d48" : "1px solid #27272a",
+                  background: selectedScene === scene.id ? "rgba(225,29,72,0.15)" : "#18181b", color: "#fafafa"
+                }}>
+                <div style={{ fontWeight: 500, fontSize: 14 }}>{scene.label}</div>
+                <div style={{ fontSize: 11, color: "#71717a" }}>{scene.desc}</div>
               </button>
             ))}
           </div>
         </section>
 
-        {status && <p className="text-sm text-zinc-400 mb-4 text-center">{status}</p>}
+        {status && <p style={{ textAlign: "center", color: "#a1a1aa", fontSize: 14, marginBottom: 16 }}>{status}</p>}
 
         {resultUrl && (
-          <section className="mb-8">
-            <h2 className="text-base font-semibold mb-3">Result</h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
-              <video src={resultUrl} controls playsInline className="w-full aspect-video bg-black" autoPlay loop />
-              <div className="p-3 flex gap-2">
-                <a href={resultUrl} download className="flex-1 text-center text-sm py-2.5 rounded-xl bg-zinc-800">Download</a>
-                <button type="button" onClick={() => { setResultUrl(null); setStatus(""); }} className="flex-1 text-sm py-2.5 rounded-xl bg-zinc-800">Clear</button>
+          <section style={{ marginBottom: 32 }}>
+            <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Result</h2>
+            <div style={{ background: "#18181b", border: "1px solid #27272a", borderRadius: 16, overflow: "hidden" }}>
+              <video src={resultUrl} controls playsInline style={{ width: "100%", aspectRatio: "16/9", background: "#000" }} autoPlay loop />
+              <div style={{ padding: 12, display: "flex", gap: 8 }}>
+                <a href={resultUrl} download style={{ flex: 1, textAlign: "center", padding: "10px 0", borderRadius: 10, background: "#27272a", color: "#fafafa", textDecoration: "none", fontSize: 14 }}>Download</a>
+                <button onClick={() => { setResultUrl(null); setStatus(""); }} style={{ flex: 1, padding: "10px 0", borderRadius: 10, background: "#27272a", border: "none", color: "#fafafa", fontSize: 14 }}>Clear</button>
               </div>
             </div>
           </section>
         )}
       </main>
 
-      <div className="fixed bottom-0 inset-x-0 z-40 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-800 pb-[env(safe-area-inset-bottom)]">
-        <div className="px-4 py-3 max-w-lg mx-auto">
-          <button type="button" onClick={handleGenerate} disabled={!canGenerate}
-            className={`w-full py-3.5 rounded-2xl font-semibold text-sm ${canGenerate ? "bg-rose-600 text-white" : "bg-zinc-800 text-zinc-500"}`}>
+      {/* Bottom button */}
+      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "rgba(9,9,11,0.95)", borderTop: "1px solid #27272a", paddingBottom: "env(safe-area-inset-bottom)" }}>
+        <div style={{ padding: "12px 16px", maxWidth: 480, margin: "0 auto" }}>
+          <button onClick={handleGenerate} disabled={!canGenerate}
+            style={{
+              width: "100%", padding: "14px 0", borderRadius: 16, border: "none", fontWeight: 600, fontSize: 15,
+              background: canGenerate ? "#e11d48" : "#27272a", color: canGenerate ? "#fff" : "#71717a"
+            }}>
             {isGenerating ? "Generating..." : "Generate Video"}
           </button>
         </div>
